@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+
+    useEffect(() => {
+    // Listen for messages from parent window (Shopify admin)
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'shopify:init') {
+        // You can handle shop-specific initialization here
+      }
+    });
+    
+    // Tell Shopify admin we're ready
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'app:ready' }, '*');
+    }
+  }, []);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -14,7 +28,7 @@ function App() {
     setInput('');
 
     try {
-      const res = await axios.post('https://1b6191e2c6af.ngrok-free.app/chat', {
+      const res = await axios.post('http://localhost:3000/chat', {
         message: input,
       });
 
