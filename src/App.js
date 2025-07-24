@@ -6,19 +6,19 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
-    useEffect(() => {
-    // Listen for messages from parent window (Shopify admin)
-    window.addEventListener('message', (event) => {
-      if (event.data.type === 'shopify:init') {
-        // You can handle shop-specific initialization here
-      }
-    });
+  //   useEffect(() => {
+  //   // Listen for messages from parent window (Shopify admin)
+  //   window.addEventListener('message', (event) => {
+  //     if (event.data.type === 'shopify:init') {
+  //       // You can handle shop-specific initialization here
+  //     }
+  //   });
     
-    // Tell Shopify admin we're ready
-    if (window.parent !== window) {
-      window.parent.postMessage({ type: 'app:ready' }, '*');
-    }
-  }, []);
+  //   // Tell Shopify admin we're ready
+  //   if (window.parent !== window) {
+  //     window.parent.postMessage({ type: 'app:ready' }, '*');
+  //   }
+  // }, []);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -26,9 +26,11 @@ function App() {
     const newMessage = { role: 'user', content: input };
     setMessages([...messages, newMessage]);
     setInput('');
+    console.log(process.env.REACT_APP_BACKEND_URL);
+    
 
     try {
-      const res = await axios.post('https://6871bfc8926d.ngrok-free.app/chat', {
+      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
         message: input,
       });
 
