@@ -28,7 +28,7 @@ function App() {
     setInput('');
 
     try {
-      const res = await axios.post('http://localhost:3000/chat', {
+      const res = await axios.post('https://6871bfc8926d.ngrok-free.app/chat', {
         message: input,
       });
 
