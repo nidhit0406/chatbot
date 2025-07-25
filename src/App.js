@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const messagesEndRef = useRef(null);
 
-  //   useEffect(() => {
-  //   // Listen for messages from parent window (Shopify admin)
-  //   window.addEventListener('message', (event) => {
-  //     if (event.data.type === 'shopify:init') {
-  //       // You can handle shop-specific initialization here
-  //     }
-  //   });
-    
-  //   // Tell Shopify admin we're ready
-  //   if (window.parent !== window) {
-  //     window.parent.postMessage({ type: 'app:ready' }, '*');
-  //   }
-  // }, []);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -49,6 +44,7 @@ function App() {
             {msg.content}
           </div>
         ))}
+         <div ref={messagesEndRef} className="scroll-to-bottom" />
       </div>
       <div className="chat-input">
         <input
