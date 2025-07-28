@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -21,8 +21,6 @@ function App() {
     const newMessage = { role: 'user', content: input };
     setMessages([...messages, newMessage]);
     setInput('');
-    console.log(process.env.REACT_APP_BACKEND_URL);
-    
 
     try {
       const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
