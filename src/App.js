@@ -5,6 +5,7 @@ import './App.css';
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false); // Add this line
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -21,6 +22,7 @@ function App() {
     const newMessage = { role: 'user', content: input };
     setMessages([...messages, newMessage]);
     setInput('');
+    setIsTyping(true); // Add this line
 
     try {
       const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
@@ -31,6 +33,8 @@ function App() {
       setMessages(prev => [...prev, aiReply]);
     } catch (err) {
       setMessages(prev => [...prev, { role: 'assistant', content: 'AI Error occurred.' }]);
+    } finally {
+      setIsTyping(false); // Add this line
     }
   };
 
@@ -42,7 +46,14 @@ function App() {
             {msg.content}
           </div>
         ))}
-         <div ref={messagesEndRef} className="scroll-to-bottom" />
+     {isTyping && (
+  <div className="typing-indicator">
+    <div className="typing-dot"></div>
+    <div className="typing-dot"></div>
+    <div className="typing-dot"></div>
+  </div>
+)}
+        <div ref={messagesEndRef} className="scroll-to-bottom" />
       </div>
       <div className="chat-input">
         <input
@@ -57,5 +68,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
